@@ -44,7 +44,10 @@ pipeline {
         stage('Maven Clean') {
             steps {
                 withMaven(maven: 'maven-3.9.6') {
-                    sh 'mvn clean'
+                    script {
+                        echo "Running 'mvn clean'"
+                        sh 'mvn clean || exit 1'
+                    }
                 }
             }
         }
