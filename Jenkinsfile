@@ -46,18 +46,14 @@ pipeline {
         stage('Maven Clean') {
             steps {
                 echo "Starting Maven Clean"
-                withMaven(maven: 'maven-3.9.6') {
-                    sh 'mvn clean'
-                }
+                sh 'mvn clean'
                 echo "Completed Maven Clean"
             }
         }
         stage('Maven Build') {
             steps {
                 echo "Starting Maven Build"
-                withMaven(maven: 'maven-3.9.6') {
-                    sh 'mvn package'
-                }
+                sh 'mvn package'
                 echo "Completed Maven Build"
             }
         }
@@ -67,18 +63,14 @@ pipeline {
             }
             steps {
                 echo "Starting Maven Test"
-                withMaven(maven: 'maven-3.9.6') {
-                    sh 'mvn test'
-                }
+                sh 'mvn test'
                 echo "Completed Maven Test"
             }
         }
         stage('Jacoco Test Report') {
             steps {
                 echo "Starting Jacoco Test Report"
-                withMaven(maven: 'maven-3.9.6') {
-                    sh 'mvn jacoco:report'
-                }
+                sh 'mvn jacoco:report'
                 echo "Completed Jacoco Test Report"
             }
             post {
@@ -114,9 +106,3 @@ pipeline {
     post {
         success {
             echo 'Build completed successfully!'
-        }
-        failure {
-            echo 'Build failed!'
-        }
-    }
-}
