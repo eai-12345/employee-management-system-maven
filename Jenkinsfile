@@ -37,25 +37,28 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
+                    echo "Cloning repository..."
                     git branch: "${params.BRANCH_NAME}", url: "${GIT_REPO_URL}", credentialsId: 'github-auth'
+                    echo "Repository cloned."
                 }
             }
         }
         stage('Maven Clean') {
             steps {
+                echo "Starting Maven Clean"
                 withMaven(maven: 'maven-3.9.6') {
-                    script {
-                        echo "Running 'mvn clean'"
-                        sh 'mvn clean || exit 1'
-                    }
+                    sh 'mvn clean'
                 }
+                echo "Completed Maven Clean"
             }
         }
         stage('Maven Build') {
             steps {
+                echo "Starting Maven Build"
                 withMaven(maven: 'maven-3.9.6') {
                     sh 'mvn package'
                 }
+                echo "Completed Maven Build"
             }
         }
         stage('Maven Test') {
@@ -63,16 +66,20 @@ pipeline {
                 expression { params.RUN_TESTS }
             }
             steps {
+                echo "Starting Maven Test"
                 withMaven(maven: 'maven-3.9.6') {
                     sh 'mvn test'
                 }
+                echo "Completed Maven Test"
             }
         }
         stage('Jacoco Test Report') {
             steps {
+                echo "Starting Jacoco Test Report"
                 withMaven(maven: 'maven-3.9.6') {
                     sh 'mvn jacoco:report'
                 }
+                echo "Completed Jacoco Test Report"
             }
             post {
                 always {
@@ -83,18 +90,22 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    echo "Building Docker Image"
                     def imageName = "${DOCKER_IMAGE}:${DOCKER_TAG}"
                     sh "docker build -t ${imageName} ."
+                    echo "Docker Image Built"
                 }
             }
         }
         stage('Push Docker Image') {
             steps {
                 script {
+                    echo "Pushing Docker Image"
                     def imageName = "${DOCKER_IMAGE}:${DOCKER_TAG}"
                     docker.withRegistry('', "${DOCKER_REGISTRY_CREDENTIALS_ID}") {
                         sh "docker push ${imageName}"
                     }
+                    echo "Docker Image Pushed"
                 }
             }
         }
