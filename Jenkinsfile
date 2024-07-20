@@ -4,6 +4,7 @@ pipeline {
     tools {
         maven 'maven-3.9.6' 
         jdk 'jdk-17' 
+        git 'git' // Add this line to use the configured Git tool
     }
 
     environment {
