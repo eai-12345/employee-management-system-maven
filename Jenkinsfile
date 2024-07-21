@@ -4,7 +4,7 @@ pipeline {
     tools {
         maven 'maven-3.9.6' 
         jdk 'jdk-17' 
-        git 'git'
+        git 'git' // Use the exact name configured in Jenkins
     }
 
     environment {
@@ -18,8 +18,13 @@ pipeline {
     parameters {
         choice(
             name: 'BRANCH_NAME', 
-            choices: ['master', 'developement', 'feature-branch'], 
+            choices: ['master', 'development', 'feature-branch'], 
             description: 'Choose the branch to build'
+        )
+        choice(
+            name: 'ENV', 
+            choices: ['dev', 'staging', 'prod'], 
+            description: 'Choose the environment'
         )
         booleanParam(
             name: 'RUN_TESTS', 
@@ -106,6 +111,9 @@ pipeline {
     post {
         success {
             echo 'Build completed successfully!'
-            }
-            }
-            }
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
