@@ -10,7 +10,7 @@ pipeline {
     environment {
         GIT_REPO_URL = 'https://github.com/eai-12345/employee-management-system-maven.git'
         DOCKER_IMAGE = "subhashis2022/employee-management-system-maven"
-        DOCKER_TAG = "${params.ENV}-${env.BUILD_ID}"
+        DOCKER_TAG = "${env.BUILD_ID}"
         DOCKER_REGISTRY_CREDENTIALS_ID = 'docker-auth'
         GITHUB_CREDENTIALS_ID = 'github-auth'
     }
