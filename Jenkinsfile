@@ -44,7 +44,7 @@ pipeline {
                 script {
                     echo "Cloning repository..."
                     git branch: "${params.BRANCH_NAME}", url: "${GIT_REPO_URL}", credentialsId: 'github-auth'
-                    echo "Repository cloned."
+                    echo "Repository cloned................................"
                 }
             }
         }
