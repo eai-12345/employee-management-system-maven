@@ -16,26 +16,10 @@ pipeline {
     }
 
     parameters {
-        choice(
-            name: 'BRANCH_NAME', 
-            choices: ['master', 'development', 'feature-branch'], 
-            description: 'Choose the branch to build'
-        )
-        choice(
-            name: 'ENV', 
-            choices: ['dev', 'staging', 'prod'], 
-            description: 'Choose the environment'
-        )
-        booleanParam(
-            name: 'RUN_TESTS', 
-            defaultValue: true, 
-            description: 'Check if you want to run tests'
-        )
-        booleanParam(
-            name: 'RUN_PMD_ANALYSIS', 
-            defaultValue: true, 
-            description: 'Check if you want to run PMD analysis'
-        )
+        choice(name: 'BRANCH_NAME', choices: ['master', 'development', 'feature-branch'], description: 'Choose the branch to build')
+        choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: 'Choose the environment')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Check if you want to run tests')
+        booleanParam(name: 'RUN_PMD_ANALYSIS', defaultValue: true, description: 'Check if you want to run PMD analysis')
     }
 
     stages {
@@ -43,8 +27,8 @@ pipeline {
             steps {
                 script {
                     echo "Cloning repository..."
-                    git branch: "${params.BRANCH_NAME}", url: "${GIT_REPO_URL}", credentialsId: 'github-auth'
-                    echo "Repository cloned................................"
+                    git branch: "${params.BRANCH_NAME}", url: "${GIT_REPO_URL}", credentialsId: "${GITHUB_CREDENTIALS_ID}"
+                    echo "Repository cloned"
                 }
             }
         }
@@ -89,7 +73,8 @@ pipeline {
                 script {
                     echo "Building Docker Image"
                     def imageName = "${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    sh "docker build -t ${imageName} ."
+                    sh 'docker buildx create --use' // Ensure buildx is used
+                    sh "docker buildx build -t ${imageName} ."
                     echo "Docker Image Built"
                 }
             }
