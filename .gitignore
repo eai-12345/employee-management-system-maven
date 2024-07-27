@@ -1,6 +1,8 @@
-HELP.md
+# Exclude all .class files
+*.class
+
+# Maven target directories
 target/
-!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -12,6 +14,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.bin
 
 ### IntelliJ IDEA ###
 .idea
@@ -31,3 +34,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Other common directories/files to exclude
+HELP.md
+.mvn/wrapper/maven-wrapper.jar
