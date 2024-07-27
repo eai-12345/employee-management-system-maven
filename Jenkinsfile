@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9.6' 
-        jdk 'jdk-17' 
+        maven 'maven-3.9.6'
+        jdk 'jdk-17'
         git 'git' // Use the exact name configured in Jenkins
     }
 
@@ -35,14 +35,14 @@ pipeline {
         stage('Maven Clean') {
             steps {
                 echo "Starting Maven Clean"
-                sh 'mvn clean'
+                sh './mvnw clean'
                 echo "Completed Maven Clean"
             }
         }
         stage('Maven Build') {
             steps {
                 echo "Starting Maven Build"
-                sh 'mvn package'
+                sh './mvnw package -DskipTests'
                 echo "Completed Maven Build"
             }
         }
@@ -52,14 +52,14 @@ pipeline {
             }
             steps {
                 echo "Starting Maven Test"
-                sh 'mvn test'
+                sh './mvnw test'
                 echo "Completed Maven Test"
             }
         }
         stage('Jacoco Test Report') {
             steps {
                 echo "Starting Jacoco Test Report"
-                sh 'mvn jacoco:report'
+                sh './mvnw jacoco:report'
                 echo "Completed Jacoco Test Report"
             }
             post {
