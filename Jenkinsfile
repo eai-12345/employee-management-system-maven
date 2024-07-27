@@ -4,7 +4,7 @@ pipeline {
     tools {
         maven 'maven-3.9.6'
         jdk 'jdk-17'
-        git 'git' // Use the exact name configured in Jenkins
+        git 'git'
     }
 
     environment {
@@ -13,6 +13,7 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_ID}"
         DOCKER_REGISTRY_CREDENTIALS_ID = 'docker-auth'
         GITHUB_CREDENTIALS_ID = 'github-auth'
+        GITHUB_API_TOKEN = credentials('github-token') // Add this line to use a GitHub token
     }
 
     parameters {
@@ -27,8 +28,24 @@ pipeline {
             steps {
                 script {
                     echo "Cloning repository..."
-                    git branch: "${params.BRANCH_NAME}", url: "${GIT_REPO_URL}", credentialsId: "${GITHUB_CREDENTIALS_ID}"
+                    git branch: "${params.BRANCH_NAME}", url: "${GIT_REPO_URL}", credentialsId: "${GITHUB_CREDENTIALS_ID}", changelog: false, poll: false
                     echo "Repository cloned"
+                }
+            }
+        }
+        stage('Verify mvnw Presence') {
+            steps {
+                script {
+                    echo "Listing files in workspace directory"
+                    sh 'ls -la'
+                }
+            }
+        }
+        stage('Set Permissions') {
+            steps {
+                script {
+                    echo "Setting execute permission on mvnw"
+                    sh 'chmod +x ./mvnw'
                 }
             }
         }
@@ -73,7 +90,7 @@ pipeline {
                 script {
                     echo "Building Docker Image"
                     def imageName = "${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    sh 'docker buildx create --use' // Ensure buildx is used
+                    sh 'docker buildx create --use'
                     sh "docker buildx build -t ${imageName} ."
                     echo "Docker Image Built"
                 }
