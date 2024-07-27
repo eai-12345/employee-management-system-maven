@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jdk AS build
 FROM openjdk:17-jdk-alpine AS stage-1
 
 # Create a user with a unique UID
-RUN id -u 1000 &>/dev/null || useradd -m -u 1000 -s /bin/bash jenkin
+RUN useradd -m -u 1001 -s /bin/bash jenkin
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y openssh-client
