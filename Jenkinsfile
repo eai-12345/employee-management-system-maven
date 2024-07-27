@@ -12,7 +12,7 @@ pipeline {
         DOCKER_IMAGE = "subhashis2022/employee-management-system-maven"
         DOCKER_TAG = "${env.BUILD_ID}"
         DOCKER_REGISTRY_CREDENTIALS_ID = 'docker-auth'
-        GITHUB_CREDENTIALS_ID = 'github-auth'
+        GITHUB_CREDENTIALS_ID = 'github-token'
     }
 
     parameters {
